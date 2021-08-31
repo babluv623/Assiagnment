@@ -3,6 +3,8 @@ const router = express.Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const Authenticate = require("../middleware/Authenticate.js");
+const products = require("../data/products");
+const importData = require("../seeder");
 
 require("../db/conn");
 const User = require("../model/userSchema");
@@ -71,6 +73,17 @@ router.post("/signin", async (req, res) => {
 // about page
 router.get("/about", Authenticate, (req, res) => {
   res.send(req.rootUser);
+});
+
+//product page
+
+router.get("/products", (req, res) => {
+  res.json(products);
+  importData();
+});
+router.get("/products/:id", (req, res) => {
+  const product = products.find((product) => product._id === req.params.id);
+  res.json(product);
 });
 
 module.exports = router;
